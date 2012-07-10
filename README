@@ -1,0 +1,5 @@
+Enigma
+
+This is an implementation of an enigma machine as described here: http://mckoss.com/Crypto/Enigma.htm
+
+It is written in Clojure.
