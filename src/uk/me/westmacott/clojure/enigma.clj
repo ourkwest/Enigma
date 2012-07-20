@@ -1,4 +1,4 @@
-(ns enigma)
+(ns uk.me.westmacott.clojure.enigma)
 
 (def alpha (int \a))
 (defn to-num [char] (- (int char) alpha))
