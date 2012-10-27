@@ -18,22 +18,28 @@ public class EnigmaMachine {
 	public String encode(String text) {
 		String output = "";
 		for (char character : text.toCharArray()) {
-			if (rotor3.rotate() && rotor2.rotate() && rotor1.rotate()) { /* Evaluated for side-effects! */ };
-			int position = alphabet.indexOf(character);
-			position = rotor3.forwardPass(position);
-			position = rotor2.forwardPass(position);
-			position = rotor1.forwardPass(position);
-			position = reflect(position);
-			position = rotor1.reversePass(position);
-			position = rotor2.reversePass(position);
-			position = rotor3.reversePass(position);
-			output += alphabet.charAt(position);
+			rotateRotors();
+			output += encodeChar(character);
 		}
 		return output;
 	}
 
-	private int reflect(int position) {
-		return reflector[position];
+	private void rotateRotors() {
+		rotor1.rotateIf(rotor1.notch() || rotor2.notch());
+		rotor2.rotateIf(rotor2.notch() || rotor3.notch());
+		rotor3.rotateIf(rotor3.notch() || true);
+	}
+	
+	private char encodeChar(char character) {
+		int position = alphabet.indexOf(character);
+		position = rotor3.forwardPass(position);
+		position = rotor2.forwardPass(position);
+		position = rotor1.forwardPass(position);
+		position = reflector[position];
+		position = rotor1.reversePass(position);
+		position = rotor2.reversePass(position);
+		position = rotor3.reversePass(position);
+		return alphabet.charAt(position);
 	}
 
 }

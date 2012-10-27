@@ -30,9 +30,15 @@ public class Rotor {
 		return pass(position, outputs, inputs);
 	}
 	
-	public boolean rotate() {
+	public void rotateIf(boolean shouldRotate) {
+		if (!shouldRotate) {
+			return;
+		}
 		displacement = (displacement + 1) % radius;
-		return displacement == notch;
+	}
+	
+	public boolean notch() {
+		return notch == displacement;
 	}
 	
 }

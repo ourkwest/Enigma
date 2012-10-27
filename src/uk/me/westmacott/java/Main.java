@@ -3,8 +3,8 @@ package uk.me.westmacott.java;
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println(createMachine().encode("enigmarevealed"));
-		System.out.println(createMachine().encode("qmjidomzwzsfjr"));
+		System.out.println(createMachine().encode("qmjidomzwzjfjr"));
+		System.out.println(createMachine().encode("apjoaxpkaoxffynefrdqyiyijbfzhenukofgslrxr"));
 	}
 
 	private static EnigmaMachine createMachine() {
