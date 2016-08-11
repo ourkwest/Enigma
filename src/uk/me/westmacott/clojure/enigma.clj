@@ -48,7 +48,8 @@
 ; and then back through the three rotors in reverse order to give a signal in a new position. This was mapped back to
 ; a light on a display board representing the output letter.
 ;
-; You can read more about the Enigma machien here: https://en.wikipedia.org/wiki/Enigma_machine
+; You can read more about the Enigma machine here: https://en.wikipedia.org/wiki/Enigma_machine
+; To get a better feel for the machine, try searching for "paper enigma machine" in your search engine of choice.
 ;
 ; Each rotor can rotate between 26 positions.
 ; Every time a character is input the first rotor advances one position (one 26th of a 360 degree turn).
