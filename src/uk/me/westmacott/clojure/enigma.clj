@@ -139,16 +139,16 @@
 
 (defn rotate-all
   "Rotates three rotors, with regard to their relative positions in the Enigma machine."
-  [[a b c]]
-  [(rotate a b) (rotate b c) (rotate c)])
+  [[rotor-a rotor-b rotor-c]]
+  [(rotate rotor-a rotor-b) (rotate rotor-b rotor-c) (rotate rotor-c)])
 
 ; We can define all future positions of the rotors.
 ; Notice that we drop the first position as the rotations happen before each key press, so the initial positions of the
 ; rotors are not used to encode any characters.
 (defn rotations-of
   "Returns an infinite (but lazily-computed) sequence of all future positions of the three provided rotors."
-  [a b c]
-  (drop 1 (iterate rotate-all [a b c])))
+  [rotor-a rotor-b rotor-c]
+  (drop 1 (iterate rotate-all [rotor-a rotor-b rotor-c])))
 
 ; The rotors were pre-set in the Enigma machine to a position dictated by the day's code book. We need to be able to
 ; set the given rotors to arbitrary positions.
@@ -162,29 +162,36 @@
 ; This makes clear the structure of the code, which here mimics the path of a signal through the Enigma machine.
 (defn encode-char
   "Encode a character with the given rotors."
-  [char [rotor-1 rotor-2 rotor-3]]
-  (let [inverse-1 (invert rotor-1)
-        inverse-2 (invert rotor-2)
-        inverse-3 (invert rotor-3)]
+  [char [rotor-a rotor-b rotor-c]]
+  (let [inverse-a (invert rotor-a)
+        inverse-b (invert rotor-b)
+        inverse-c (invert rotor-c)]
     (-> char
         to-num
-        rotor-3 rotor-2 rotor-1
+        rotor-c rotor-b rotor-a
         reflector
-        inverse-1 inverse-2 inverse-3
+        inverse-a inverse-b inverse-c
         to-char)))
 
 ; Finally, we can build an Enigma machine. The whole machine itself is a pure function (it has no side effects).
 ; It takes a sequence of characters (such as a string) and maps the encoding function over them and the sequence of
-; upcoming rotor positions.
+; upcoming rotor positions. It then applies 'str' to the sequence of characters returned to create a string output.
+;
 ; Because it is stateless (having no side effects, it cannot even update its own internal state), if it is reused for
 ; a new message it appears to start from the original rotor positions.
 (defn build
   "Returns a function that uses the given rotors and starting positions to encode characters."
-  [r1 r2 r3 s1 s2 s3]
-  #(apply str (map encode-char % (rotations-of (pre-set r1 s1) (pre-set r2 s2) (pre-set r3 s3)))))
+  [rotor-a rotor-b rotor-c setting-a setting-b setting-c]
+  (fn [message]
+    (apply str (map encode-char
+                    message
+                    (rotations-of (pre-set rotor-a setting-a)
+                                  (pre-set rotor-b setting-b)
+                                  (pre-set rotor-c setting-c))))))
 
 ; Now we can build a sample Enigma machine, passing it today's selection of rotors and rotor positions.
-(def my-machine (build rotor-1 rotor-2 rotor-3 \m \c \k))
+(def my-machine
+  (build rotor-1 rotor-2 rotor-3 \m \c \k))
 
 ; And we can test it with some sample data to ensure correctness!
 (println (my-machine "qmjidomzwzjfjr"))
